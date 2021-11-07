@@ -380,7 +380,7 @@ plt.figure(figsize=(16,2))
 new_series_13.plot(style = 'k--')
 
 new_series_2.index = pd.to_datetime(new_series_2.index)
-groups = new_series_2.groupby([TimeGrouper("A")])
+groups = new_series_2.groupby(pd.Grouper(freq='A'))
 plt.figure(figsize=(20,3))
 a=311
 print("Store2 Daily Sales Plot")
@@ -390,7 +390,7 @@ for name, group in groups:
     a+=1
     plt.title(name.year)
 
-groups = new_series_2['2013'].groupby([TimeGrouper("A"),TimeGrouper("Q")])
+groups = new_series_2['2013'].groupby([pd.Grouper(freq="A"),pd.Grouper(freq="Q")])
 plt.figure(figsize=(20,3))
 a=411
 print("Store2 Daily Sales Plot")
@@ -399,8 +399,8 @@ for name, group in groups:
     group.plot()
     a+=1
     plt.title(name)
-    
-groups = new_series_2['2014'].groupby([TimeGrouper("A"),TimeGrouper("Q")])
+
+groups = new_series_2['2014'].groupby([pd.Grouper(freq="A"),pd.Grouper(freq="Q")])
 plt.figure(figsize=(20,3))
 a=411
 for name, group in groups:
@@ -409,7 +409,7 @@ for name, group in groups:
     a+=1
     plt.title(name)
     
-groups = new_series_2['2015'].groupby([TimeGrouper("A"),TimeGrouper("Q")])
+groups = new_series_2['2015'].groupby([pd.Grouper(freq="A"),pd.Grouper(freq="Q")])
 plt.figure(figsize=(20,3))
 a=411
 for name, group in groups:
@@ -418,7 +418,7 @@ for name, group in groups:
     a+=1
     plt.title(name)
 
-groups = new_series_2['2013'].groupby([TimeGrouper("A"),TimeGrouper("M")])
+groups = new_series_2['2013'].groupby([pd.Grouper(freq="A"),pd.Grouper(freq="M")])
 plt.figure(figsize=(15,6))
 a=611
 print("Store2 Daily Sales Plot")
@@ -459,15 +459,15 @@ daily_sales_min = df_combined.groupby(['Date'])['Sales'].min()
 
 print("All stores total monthly sales - by Year")
 plt.figure(figsize=(16,2))
-daily_sales_sum['2013'].groupby([TimeGrouper("A"),TimeGrouper("M")]).sum().plot()
+daily_sales_sum['2013'].groupby([pd.Grouper(freq="A"),pd.Grouper(freq="M")]).sum().plot()
 
 plt.figure(figsize=(16,2))
-daily_sales_sum["2014"].groupby([TimeGrouper("A"),TimeGrouper("M")]).sum().plot()
+daily_sales_sum["2014"].groupby([pd.Grouper(freq="A"),pd.Grouper(freq="M")]).sum().plot()
 
 plt.figure(figsize=(16,2))
-daily_sales_sum["2015"].groupby([TimeGrouper("A"),TimeGrouper("M")]).sum().plot()
+daily_sales_sum["2015"].groupby([pd.Grouper(freq="A"),pd.Grouper(freq="M")]).sum().plot()
 
-groups = daily_sales_sum["2013"].groupby([TimeGrouper("A"),TimeGrouper("M")])
+groups = daily_sales_sum["2013"].groupby([pd.Grouper(freq="A"),pd.Grouper(freq="M")])
 
 plt.figure(figsize=(15,6))
 a=611
@@ -497,7 +497,7 @@ for name, group in groups:
         plt.title(name)
         
 
-groups = daily_sales_mean["2014"].groupby([TimeGrouper("A"),TimeGrouper("M")])
+groups = daily_sales_mean["2014"].groupby([pd.Grouper(freq="A"),pd.Grouper(freq="M")])
 
 plt.figure(figsize=(15,6))
 a=611
@@ -526,7 +526,7 @@ for name, group in groups:
         i+=1
         plt.title(name)
 
-groups = daily_sales_mean["2015"].groupby([TimeGrouper("A"),TimeGrouper("M")])
+groups = daily_sales_mean["2015"].groupby([pd.Grouper(freq="A"),pd.Grouper(freq="M")])
 
 plt.figure(figsize=(15,6))
 a=611
@@ -556,6 +556,7 @@ for name, group in groups:
         plt.title(name)
 
 #6.4 Statistics over window period
+'''
 groups = df_combined.groupby(['Year','Month'])['Sales'].mean()
 plt.figure(figsize=(10,3))
 a = plt.subplot(1,1,1)
@@ -596,64 +597,65 @@ handles, labels = a.get_legend_handles_labels()
 a.legend(handles[::-1], labels[::-1])
 plt.title("overall sales: yearly statistics",color='blue')
 
-groups = new_series_2.groupby(TimeGrouper("W")).mean()
+groups = new_series_2.groupby(pd.Grouper(freq="W")).mean()
 plt.figure(figsize=(10,3))
 a = plt.subplot(1,1,1)
 #plt.subplot(131) 
 #plt.title('Monthly mean plot',color='blue') 
 line1=groups.plot(label = 'mean')
 
-groups = new_series_2.groupby(TimeGrouper("W")).median()
+groups = new_series_2.groupby(pd.Grouper(freq="W")).median()
 line2=groups.plot(label = 'median')
 
-groups = new_series_2.groupby(TimeGrouper("W")).max()
+groups = new_series_2.groupby(pd.Grouper(freq="W")).max()
 line3=groups.plot(label = 'max')
 
-groups = new_series_2.groupby(TimeGrouper("W")).min()
+groups = new_series_2.groupby(pd.Grouper(freq="W")).min()
 line4=groups.plot(label = 'min')
 
 handles, labels = a.get_legend_handles_labels()
 a.legend(handles[::-1], labels[::-1])
 
 
-groups = new_series_2.groupby(TimeGrouper("M")).mean()
+groups = new_series_2.groupby(pd.Grouper(freq="M")).mean()
 plt.figure(figsize=(10,3))
 a = plt.subplot(1,1,1)
 #plt.subplot(131) 
 #plt.title('Monthly mean plot',color='blue') 
 line1=groups.plot(label = 'mean')
 
-groups = new_series_2.groupby(TimeGrouper("M")).median()
+groups = new_series_2.groupby(pd.Grouper(freq="M")).median()
 line2=groups.plot(label = 'median')
 
-groups = new_series_2.groupby(TimeGrouper("M")).max()
+groups = new_series_2.groupby(pd.Grouper(freq="M")).max()
 line3=groups.plot(label = 'max')
 
-groups = new_series_2.groupby(TimeGrouper("M")).min()
+groups = new_series_2.groupby(pd.Grouper(freq="M")).min()
 line4=groups.plot(label = 'min')
 
 handles, labels = a.get_legend_handles_labels()
 a.legend(handles[::-1], labels[::-1])
 
 
-groups = new_series_2.groupby(TimeGrouper("Q")).mean()
+groups = new_series_2.groupby(pd.Grouper(freq="Q")).mean()
 plt.figure(figsize=(10,3))
 a = plt.subplot(1,1,1)
 #plt.subplot(131) 
 #plt.title('Monthly mean plot',color='blue') 
 line1=groups.plot(label = 'mean')
 
-groups = new_series_2.groupby(TimeGrouper("Q")).median()
+groups = new_series_2.groupby(pd.Grouper(freq="Q")).median()
 line2=groups.plot(label = 'median')
 
-groups = new_series_2.groupby(TimeGrouper("Q")).max()
+groups = new_series_2.groupby(pd.Grouper(freq="Q")).max()
 line3=groups.plot(label = 'max')
 
-groups = new_series_2.groupby(TimeGrouper("Q")).min()
+groups = new_series_2.groupby(pd.Grouper(freq="Q")).min()
 line4=groups.plot(label = 'min')
 
 handles, labels = a.get_legend_handles_labels()
 a.legend(handles[::-1], labels[::-1])
+'''
 
 #6.5 Time series lag plot
 def lag_n_plot(series, n):
@@ -744,3 +746,4 @@ autocorrelation_plot(daily_sales_sum)
 
 #7. Save the table¶
 df_combined.to_csv('df_combined_cleaned.csv', index=None)
+    
