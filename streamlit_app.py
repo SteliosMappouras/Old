@@ -5,13 +5,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import datetime as dt
-
+import sklearn as sk
 
 
 #st.title('Data Science Project:')
 #st.caption('Stelios Mappouras\nIoannis Volonakis\nSavvina Rousou\nMarios Kyriakides')
 
-
+#https://www.kaggle.com/xiaoxiao1989/rossmann-sales-prediction-exploration-cleaning
 
 #st.dataframe(store.head())
 
@@ -743,6 +743,8 @@ print('autocorrelation plot of All Store daily sales sum')
 plt.figure(figsize=(20,4))
 plt.xticks([x for x in range(900) if x % 28 == 0]) 
 autocorrelation_plot(daily_sales_sum)
+
+#plt.show()
 
 #7. Save the table¶
 df_combined.to_csv('df_combined_cleaned.csv', index=None)
