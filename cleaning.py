@@ -5,6 +5,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import datetime as dt
 import sklearn as sk
+from sklearn import model_selection
+
+import xgboost as xgb
+
+
 
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.seasonal import seasonal_decompose
@@ -304,7 +309,7 @@ target = ts_xgboost["Sales"]
 ts_xgboost.to_csv('cleaned_dataset_new.csv', index=None)
 
 
-'''
+
 X_train, X_test, y_train, y_test = model_selection.train_test_split(features, target, test_size = 0.20)
 
 #Baseline XGBoost
@@ -369,5 +374,5 @@ model_errors = pd.DataFrame({
 model_errors.sort_values(by = "RMSE")
 
 print(model_errors)
-'''
+
 
