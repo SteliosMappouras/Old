@@ -80,12 +80,12 @@ print(train)
 # Plot histogram grid
 train.hist(xrot=-45,figsize=(10,10))
 # Clear the text "residue"
-#plt.show()
+##plt.show()
 
 # Plot histogram grid
 store.hist(xrot=-45,figsize=(10,10))
 # Clear the text "residue"
-#plt.show()
+##plt.show()
 
 # Summarize numerical features
 train.describe()
@@ -107,7 +107,7 @@ sns.boxplot(y='Customers', data=train)
 plt.figure(figsize=(4,3))
 sns.boxplot(y='SalesPerCustomer', data=train)
 
-#plt.show()
+##plt.show()
 
 #sales per store stats  
 train[train.Sales < 1000][['Store','Sales']].describe()
@@ -184,7 +184,7 @@ train.Customers.hist(figsize=(4,2))
 
 print(lam3)
 train.AvgPurchasing.hist(figsize=(4,2))
-#plt.show()
+##plt.show()
 
 
 #2.4 Missing values of numerical features¶
@@ -744,7 +744,7 @@ plt.figure(figsize=(20,4))
 plt.xticks([x for x in range(900) if x % 28 == 0]) 
 autocorrelation_plot(daily_sales_sum)
 
-#plt.show()
+##plt.show()
 
 #7. Save the table¶
 df_combined.to_csv('df_combined_cleaned.csv', index=None)

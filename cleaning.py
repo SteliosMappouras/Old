@@ -328,8 +328,7 @@ xgboost = xgb.train(params, dtrain, 100, evals=watchlist,early_stopping_rounds= 
 preds = xgboost.predict(dtest)
 
 # RMSE of model
-rms_xgboost = sqrt(mean_squared_error(y_test, preds))
-print("Root Mean Squared Error for XGBoost:", rms_xgboost)
+
 
 #Hypertuning XGBoost
 #Now let's try to decrease the RMSE of XGBoost by passing different values for our hyperparameters in the XGBoost model.
@@ -351,8 +350,7 @@ xgboost_2 = xgb.train(params_2, dtrain, 100, evals=watchlist,early_stopping_roun
 preds_2 = xgboost_2.predict(dtest)
 
 # RMSE of model
-rms_xgboost_2 = sqrt(mean_squared_error(y_test, preds_2))
-print("Root Mean Squared Error for XGBoost:", rms_xgboost_2)
+
 
 # Let's see the feature importance
 fig, ax = plt.subplots(figsize=(10,10))
@@ -363,15 +361,11 @@ xgb.plot_importance(xgboost_2, max_num_features=50, height=0.8, ax=ax)
 
 #Results
 # Comparing performance of above three models - through RMSE
-rms_arima = format(float(rms_arima))
-rms_xgboost_2 = format(float(rms_xgboost_2))
 
 model_errors = pd.DataFrame({
-    "Model": ["SARIMA",  "XGBoost"],
-    "RMSE": [rms_arima, rms_xgboost_2]
+    "Model": ["XGBoost"],
 })
 
-model_errors.sort_values(by = "RMSE")
 
 print(model_errors)
 

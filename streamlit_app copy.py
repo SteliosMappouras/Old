@@ -47,7 +47,7 @@ info = store.info()
 print(info)
 
 
-#plt.show()
+##plt.show()
 
 
 print(store.isnull().sum())
