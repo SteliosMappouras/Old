@@ -3,8 +3,8 @@ import datacompy
 
 
 
-test_store = pd.read_csv("VolonakisClean/test_store.csv")
-clean_test_store = pd.read_csv("clean_test_store.csv")
+test_store = pd.read_csv("test/train_store.csv")
+clean_test_store = pd.read_csv("train_store.csv")
 
 compare = datacompy.Compare(   
 
