@@ -16,9 +16,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
 from scipy.stats import boxcox
-
-from sklearn.cluster import KMeans
-from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 
 # import data. Be careful for Date type, String type (factors in R).
@@ -318,12 +317,11 @@ print(train_model.head())
 test_model = test_store.drop(['Date','Id'], axis=1)
 
 
-from sklearn.model_selection import train_test_split
 X = train_model.drop('Sales', axis=1)
 y = train_model['Sales']
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 
-from sklearn.preprocessing import StandardScaler
+
 scaler = StandardScaler()
 scaler.fit(X_train)
 X_train_scaled = pd.DataFrame(scaler.transform(X_train),columns=X.columns.values)
@@ -334,7 +332,6 @@ model_list = {
               'LinearRegression':LinearRegression(),
               'RandomForest_new':RandomForestRegressor(),
               'GradientBoostingRegressor_new':GradientBoostingRegressor()
-              
            }
 
 for  model_name,model in model_list.items():
