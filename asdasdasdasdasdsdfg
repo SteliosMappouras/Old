@@ -1,0 +1,83 @@
+
+#now we are ready for modeling, but before we do that we are going to do a visual exploration
+'''
+#Compute pairwise correlation of columns using pandas.corr() function.
+corMat = pd.DataFrame(train.loc[:, ['DayOfWeek', 'Sales', 'Month', 'Year', 'Customers', 'Promo','StateHoliday', 'SchoolHoliday']].corr())
+print(corMat)
+
+# visualize correlations using heatmap
+sns.heatmap(data=corMat)
+
+
+# Box plot of 'Sales per Customer'
+plt.figure(figsize=(4,3))
+train_store['SalesPerCustomer'] = train_store.Sales / train_store.Customers
+sns.boxplot(y='SalesPerCustomer', data=train_store)
+
+train_store.drop(columns=['SalesPerCustomer'])
+
+print(train_store.dtypes)
+#Box plot of Sales by year
+train_store.boxplot(column='Sales', by='Year')
+train_store.hist(column='Sales', by='Year')
+
+
+#Box plot of Sales by month
+train_store.boxplot(column='Sales', by='Month')
+
+#sales per day (sundays stores are closed)
+train_store.boxplot(column='Sales', by='DayOfWeek')
+
+#sales on holidays
+train_store.boxplot(column='Sales', by='StateHoliday')
+
+#sales when schools are closed
+train_store.boxplot(column='Sales', by='SchoolHoliday')
+
+
+# Box plot of 'Customers'
+train_store.boxplot(column='Customers', by='Sales')
+'''
+
+#LinearRegression fits a linear model with coefficients w = (w1, …, wp) to minimize the residual sum of squares between the observed targets in the dataset, and the targets predicted by the linear approximation.
+#A random forest is a meta estimator that fits a number of classifying decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting. The sub-sample size is controlled with the max_samples parameter if bootstrap=True (default), otherwise the whole dataset is used to build each tree.
+#GB builds an additive model in a forward stage-wise fashion; it allows for the optimization of arbitrary differentiable loss functions. In each stage a regression tree is fit on the negative gradient of the given loss function.
+
+
+#models
+train_model = train_store.drop(['Customers', 'Date'], axis=1)
+
+print(train_model.head())
+
+test_model = test_store.drop(['Date','Id'], axis=1)
+
+
+X = train_model.drop('Sales', axis=1)
+y = train_model['Sales']
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+
+
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train_scaled = pd.DataFrame(scaler.transform(X_train),columns=X.columns.values)
+X_test_scaled = pd.DataFrame(scaler.transform(X_test),columns=X.columns.values)
+
+
+model_list = {
+              'LinearRegression':LinearRegression(),
+              'RandomForest_new':RandomForestRegressor(),
+              'GradientBoostingRegressor_new':GradientBoostingRegressor()
+           }
+
+for  model_name,model in model_list.items():
+    model.fit(X_train, y_train)
+    model.score(X_test, y_test)
+    test_model = pd.DataFrame(test_model)
+    submission = {}
+    submission = pd.DataFrame()
+    submission["Predicted Sales"] = model.predict(test_model)
+    submission = submission.reset_index()
+    submission.head()
+    submission.tail()
+    submission.to_csv(model_name, sep=',', index=False)
+    submission

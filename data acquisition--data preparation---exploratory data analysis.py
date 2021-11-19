@@ -112,7 +112,7 @@ print('levels :', train['StateHoliday'].unique(), '; data type :', train['StateH
 
 
 # It worked, now automatize the process.
-def factor_to_integer(df, colname, start_value=0):
+def categorical_to_numerical(df, colname, start_value=0):
     while df[colname].dtype == object:
         myval = start_value # factor starts at "start_value".
         for sval in df[colname].unique():
@@ -131,7 +131,7 @@ train['SchoolHoliday'].unique()
 # In[44]:
 
 
-factor_to_integer(train, 'SchoolHoliday')
+categorical_to_numerical(train, 'SchoolHoliday')
 
 
 # In[45]:
@@ -291,8 +291,8 @@ test.dtypes
 
 
 #fixing StateHoliday and SchoolHoliday columns type
-factor_to_integer(test, 'StateHoliday')
-factor_to_integer(test, 'SchoolHoliday')
+categorical_to_numerical(test, 'StateHoliday')
+categorical_to_numerical(test, 'SchoolHoliday')
 test.dtypes
 
 
@@ -343,7 +343,7 @@ store['PromoInterval'].unique()
 store.loc[store['Promo2'] == 0, ['Promo2SinceWeek', 'Promo2SinceYear', 'PromoInterval']] = 0
 store.loc[store['Promo2'] != 0, 'Promo2SinceWeek'] = store['Promo2SinceWeek'].max() - store.loc[store['Promo2'] != 0, 'Promo2SinceWeek']
 store.loc[store['Promo2'] != 0, 'Promo2SinceYear'] = store['Promo2SinceYear'].max() - store.loc[store['Promo2'] != 0, 'Promo2SinceYear']
-factor_to_integer(store, 'PromoInterval', start_value=0)
+categorical_to_numerical(store, 'PromoInterval', start_value=0)
 store.dtypes
 
 
@@ -351,8 +351,8 @@ store.dtypes
 
 
 #Change the categorical values (string type) of StoreType and Assortment columns to integers. Check the results.
-factor_to_integer(store, 'StoreType')
-factor_to_integer(store, 'Assortment')
+categorical_to_numerical(store, 'StoreType')
+categorical_to_numerical(store, 'Assortment')
 store.dtypes
 
 
