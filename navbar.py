@@ -20,6 +20,9 @@ from sklearn.impute import SimpleImputer
 from scipy.stats import boxcox
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import cross_val_score
+
 
 
 def categorical_to_numerical(df, colname, start_value=0):
@@ -150,7 +153,7 @@ if st.session_state.workflow == 'Data preparation':
         st.session_state.data_types=st.write("Next, we want to break the Date column into Year and Month, then drop date.")
         train['Year'] = pd.DatetimeIndex(train['Date']).year
         train['Month'] = pd.DatetimeIndex(train['Date']).month
-        train.drop(columns=['Date'])
+
         sample = train.head(200)
         st.write(sample)
 
@@ -161,9 +164,8 @@ if st.session_state.workflow == 'Data preparation':
         st.write('Train Data Types After:', train.dtypes.astype(str))
 
         st.write('check for empty (NaN values) for each column')
-        from collections import Counter
-        x = {colname : train[colname].isnull().sum() for colname in train.columns}
-        st.write(Counter(x).most_common())
+        st.write(train.isnull().sum())
+
         st.write('all values are zero, we have no empty values.')
 
 
@@ -223,9 +225,8 @@ if st.session_state.workflow == 'Data preparation':
         st.write('Test Data Types After:', test.dtypes.astype(str))
 
         st.write('check for empty (NaN values) for each column')
-        from collections import Counter
-        x = {colname : test[colname].isnull().sum() for colname in test.columns}
-        st.write(Counter(x).most_common())
+        st.write(test.isnull().sum())
+
      
         st.write('There are 11 missing values in Open column, lets see from which store they come:')
         st.write(test[np.isnan(test['Open'])])
@@ -235,9 +236,8 @@ if st.session_state.workflow == 'Data preparation':
         test[np.isnan(test['Open'])] = 1
 
         st.write("Check if there are still missing values")
-        from collections import Counter
-        x = {colname : test[colname].isnull().sum() for colname in test.columns}
-        st.write(Counter(x).most_common())
+        st.write(test.isnull().sum())
+
 
         st.write('Test Data Types:', test.dtypes.astype(str))
 
@@ -272,9 +272,8 @@ if st.session_state.workflow == 'Data preparation':
         st.session_state.data_types=st.write("As we can see, no rows were dropped, we had no duplicates in store dataset.")
 
         st.write('check for empty (NaN values) for each column')
-        from collections import Counter
-        x = {colname : store[colname].isnull().sum() for colname in store.columns}
-        st.write(Counter(x).most_common())
+        st.write(store.isnull().sum())
+
 
 
         st.write(store.describe())
@@ -298,9 +297,8 @@ if st.session_state.workflow == 'Data preparation':
         st.write('Stre Data Types:', store.dtypes.astype(str))
 
         st.write('check for empty (NaN values) for each column again:')
-        from collections import Counter
-        x = {colname : store[colname].isnull().sum() for colname in store.columns}
-        st.write(Counter(x).most_common())
+        st.write(store.isnull().sum())
+
 
 
         st.write("We see that we still have NaN values, lets try fixing them with sklean imputer")
@@ -308,10 +306,8 @@ if st.session_state.workflow == 'Data preparation':
         store_imputed = imputer.transform(store)
 
         store_new = pd.DataFrame(store_imputed, columns=store.columns.values)
-        st.write('check for empty (NaN values) for each column again:')
-        from collections import Counter
-        x = {colname : store_new[colname].isnull().sum() for colname in store_new.columns}
-        st.write(Counter(x).most_common())
+        st.write(store_new.isnull().sum())
+
 
         st.write("Results of Store:")
         st.write("Stats:",store.describe(), "First Rows:",store.head(),"Last Rows:", store.tail())
@@ -353,6 +349,7 @@ if st.session_state.workflow == 'Data preparation':
 
         st.session_state.data_type=st.subheader('Visual Exploration:')
 
+        
         st.write("coorelation between columns in train_store")
 
         fig, ax = plt.subplots()
@@ -366,58 +363,41 @@ if st.session_state.workflow == 'Data preparation':
         st.write(fig)
 
         st.write("Sales per customer")
-        train_store['SalesPerCustomer'] = train_store.Sales / train_store.Customers
 
         fig, ax = plt.subplots()
-        sns.histplot(x="Customers", y="Sales",
-             data=train_store, ax=ax)
+        sns.histplot(x="Customers", y="Sales",data=train_store, ax=ax)
         st.write(fig)
-
-        fig, ax = plt.subplots()
-        sns.histplot(y="SalesPerCustomer",
-             data=train_store, ax=ax)
-        st.write(fig)
-        train_store.drop(columns=['SalesPerCustomer'])
-
-
 
         st.write("Sales by year")
         fig, ax = plt.subplots()
-        sns.histplot(x="Year", y="Sales",
-             data=train_store, ax=ax)
+        sns.histplot(x="Year", y="Sales",data=train_store, ax=ax)
         st.write(fig)
 
         fig, ax = plt.subplots()
-        sns.boxplot(x="Year", y="Sales",
-             data=train_store, ax=ax)
+        sns.boxplot(x="Year", y="Sales",data=train_store, ax=ax)
         st.write(fig)
 
 
         st.write("Sales by Month")
         fig, ax = plt.subplots()
-        sns.histplot(x="Month", y="Sales",
-             data=train_store, ax=ax)
+        sns.histplot(x="Month", y="Sales",data=train_store, ax=ax)
         st.write(fig)
 
         fig, ax = plt.subplots()
-        sns.boxplot(x="Month", y="Sales",
-             data=train_store, ax=ax)
+        sns.boxplot(x="Month", y="Sales",data=train_store, ax=ax)
         st.write(fig)
 
         
         st.write("Sales on Holidays")
         fig, ax = plt.subplots()
-        sns.histplot(x="SchoolHoliday", y="Sales",
-             data=train_store, ax=ax)
+        sns.histplot(x="SchoolHoliday", y="Sales",data=train_store, ax=ax)
         st.write(fig)
 
         fig, ax = plt.subplots()
-        sns.boxplot(x="StateHoliday", y="Sales",
-             data=train_store, ax=ax)
+        sns.boxplot(x="StateHoliday", y="Sales",data=train_store, ax=ax)
         st.write(fig)
+        
 
-
-        '''
         st.write("Now, its time to start modeling. First of all, we will drop columns that are useless for the forecasting, like Customers, Data from train_store, and Date and Id from test_store")
         train_model = train_store.drop(['Customers', 'Date'], axis=1)
 
@@ -436,41 +416,34 @@ if st.session_state.workflow == 'Data preparation':
         y = train_model['Sales']
         X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 
-        st.write("before fitting the models, we should use StandardScaler function to clear the NaNs")
-
-        scaler = StandardScaler()
-        scaler.fit(X_train)
-        X_train_scaled = pd.DataFrame(scaler.transform(X_train),columns=X.columns.values)
-        X_test_scaled = pd.DataFrame(scaler.transform(X_test),columns=X.columns.values)
-
-
 
         st.write("The models that we are going to use are: Sklearn's: LinearRegression, Random Forest, GradientBoostingRegressor")
         model_list = {
                 'LinearRegression':LinearRegression(),
-                'RandomForest_new':RandomForestRegressor(),
-                'GradientBoostingRegressor_new':GradientBoostingRegressor()
+                'RandomForest':RandomForestRegressor(),
+                'GradientBoostingRegressor':GradientBoostingRegressor()
                 }
 
         for  model_name,model in model_list.items():
+                st.write(model_name,":")
                 model.fit(X_train, y_train)
-                model.score(X_test, y_test)
+                st.write("Accuracy:",model.score(X_test, y_test))
                 test_model = pd.DataFrame(test_model)
                 submission = {}
                 submission = pd.DataFrame()
                 submission["Predicted Sales"] = model.predict(test_model)
                 submission = submission.reset_index()
-                submission.head()
-                submission.tail()
-                submission.to_csv(model_name, sep=',', index=False)
-                st.dataframe(submission)
+                st.write(submission)
 
 
-'''
+                
+        st.learn("simperasmata:................")                
 
 
 
-        
+
+
+
 
 
 
