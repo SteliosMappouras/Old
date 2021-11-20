@@ -65,6 +65,7 @@ st.title('''**Πρόβλεψη μελλοντικών πωλήσεων**''')
 st.session_state.workflow = st.sidebar.selectbox('Select a Data Science Life Cycle', ['Business problem', 'Data acquisition', 'Data preparation', 'Exploratory Data analysis', 'Data modeling', 'Visualization & Communication', 'Deployment & Maintenance'] )
 
 if st.session_state.workflow == 'Business problem':
+        '''
         st.session_state.data_type=st.header('**Step 1 - Business Problem**') 
         st.session_state.data_type=st.subheader('Πρόβλημα') 
         st.session_state.data_type=st.caption("""Χρησιμοποιώντας τα διαθέσιμα δεδομένα 
@@ -74,7 +75,18 @@ if st.session_state.workflow == 'Business problem':
 
         st.session_state.data_type=st.subheader('Δεδομένα') 
         st.session_state.data_type=st.caption("""Ηistorical data including Sales, Historical data excluding Sales and Supplemental information about the stores """)
-                                                  
+            '''
+
+
+
+
+
+
+
+
+
+
+
 
 if st.session_state.workflow == 'Data acquisition':
         st.session_state.data_type=st.header('**Step 2 - Data acquisition**')
@@ -107,8 +119,6 @@ if st.session_state.workflow == 'Data preparation':
 
         st.session_state.data_type=st.subheader('Reduction')
         st.session_state.data_type=st.write('Reduction in size')
-
-
 
 
         st.session_state.data_type=st.write('We already started fixing inconsistent data types while importing the datasets, we parsed the data dypes as string in order to be able to handle it easier later.')
@@ -338,6 +348,135 @@ if st.session_state.workflow == 'Data preparation':
         st.write(test_store.isnull().sum())
 
         st.write("Train Store dataset will be used for training of the model, and test_store for testing.")
+
+
+
+        st.session_state.data_type=st.subheader('Visual Exploration:')
+
+        st.write("coorelation between columns in train_store")
+
+        fig, ax = plt.subplots()
+        sns.heatmap(train_store.corr(), ax=ax)
+        st.write(fig)
+
+        st.write("coorelation between columns in test_store")
+
+        fig, ax = plt.subplots()
+        sns.heatmap(test_store.corr(), ax=ax)
+        st.write(fig)
+
+        st.write("Sales per customer")
+        train_store['SalesPerCustomer'] = train_store.Sales / train_store.Customers
+
+        fig, ax = plt.subplots()
+        sns.histplot(x="Customers", y="Sales",
+             data=train_store, ax=ax)
+        st.write(fig)
+
+        fig, ax = plt.subplots()
+        sns.histplot(y="SalesPerCustomer",
+             data=train_store, ax=ax)
+        st.write(fig)
+        train_store.drop(columns=['SalesPerCustomer'])
+
+
+
+        st.write("Sales by year")
+        fig, ax = plt.subplots()
+        sns.histplot(x="Year", y="Sales",
+             data=train_store, ax=ax)
+        st.write(fig)
+
+        fig, ax = plt.subplots()
+        sns.boxplot(x="Year", y="Sales",
+             data=train_store, ax=ax)
+        st.write(fig)
+
+
+        st.write("Sales by Month")
+        fig, ax = plt.subplots()
+        sns.histplot(x="Month", y="Sales",
+             data=train_store, ax=ax)
+        st.write(fig)
+
+        fig, ax = plt.subplots()
+        sns.boxplot(x="Month", y="Sales",
+             data=train_store, ax=ax)
+        st.write(fig)
+
+        
+        st.write("Sales on Holidays")
+        fig, ax = plt.subplots()
+        sns.histplot(x="SchoolHoliday", y="Sales",
+             data=train_store, ax=ax)
+        st.write(fig)
+
+        fig, ax = plt.subplots()
+        sns.boxplot(x="StateHoliday", y="Sales",
+             data=train_store, ax=ax)
+        st.write(fig)
+
+
+        '''
+        st.write("Now, its time to start modeling. First of all, we will drop columns that are useless for the forecasting, like Customers, Data from train_store, and Date and Id from test_store")
+        train_model = train_store.drop(['Customers', 'Date'], axis=1)
+
+        st.write(train_model.head())
+
+        test_model = test_store.drop(['Date','Id'], axis=1)
+        st.write(test_model.head())
+
+
+        st.write("Also, for the train we will drop Sales column, because we want to fit our models without it to make forecast")
+        X = train_model.drop('Sales', axis=1)
+        y = train_model['Sales']
+
+        st.write("Then, break train test split using \"train_test_split function\"")
+        X = train_model.drop('Sales', axis=1)
+        y = train_model['Sales']
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+
+        st.write("before fitting the models, we should use StandardScaler function to clear the NaNs")
+
+        scaler = StandardScaler()
+        scaler.fit(X_train)
+        X_train_scaled = pd.DataFrame(scaler.transform(X_train),columns=X.columns.values)
+        X_test_scaled = pd.DataFrame(scaler.transform(X_test),columns=X.columns.values)
+
+
+
+        st.write("The models that we are going to use are: Sklearn's: LinearRegression, Random Forest, GradientBoostingRegressor")
+        model_list = {
+                'LinearRegression':LinearRegression(),
+                'RandomForest_new':RandomForestRegressor(),
+                'GradientBoostingRegressor_new':GradientBoostingRegressor()
+                }
+
+        for  model_name,model in model_list.items():
+                model.fit(X_train, y_train)
+                model.score(X_test, y_test)
+                test_model = pd.DataFrame(test_model)
+                submission = {}
+                submission = pd.DataFrame()
+                submission["Predicted Sales"] = model.predict(test_model)
+                submission = submission.reset_index()
+                submission.head()
+                submission.tail()
+                submission.to_csv(model_name, sep=',', index=False)
+                st.dataframe(submission)
+
+
+'''
+
+
+
+        
+
+
+
+
+
+
 
 
 

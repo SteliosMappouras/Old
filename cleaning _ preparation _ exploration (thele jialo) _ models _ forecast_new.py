@@ -34,7 +34,7 @@ store = pd.read_csv("store.csv", sep=",", dtype={'StoreType': str,'Assortment': 
 #sorted 'a'-> 0, 'b' -> 1, etc.
 
 # this function converts categorical column data to numeric
-def categorical_to_numerical(df, colname, start_value=0):
+def factor_to_integer(df, colname, start_value=0):
     while df[colname].dtype == object:
         myval = start_value # factor starts at "start_value".
         for sval in df[colname].unique():
@@ -74,12 +74,12 @@ train['Month'] = pd.DatetimeIndex(train['Date']).month
 
 #convert categorical to numerical 
 print('levels before:', train['StateHoliday'].unique(), '; data type :', train['StateHoliday'].dtype)
-categorical_to_numerical(train,'StateHoliday')
+factor_to_integer(train,'StateHoliday')
 print('levels after:', train['StateHoliday'].unique(), '; data type :', train['StateHoliday'].dtype)
 
 #it worked
 #do the same to SchoolHoliday
-categorical_to_numerical(train, 'SchoolHoliday')
+factor_to_integer(train, 'SchoolHoliday')
 
 #Check the data types for each column.
 print(train.dtypes)
@@ -142,8 +142,8 @@ test['Month'] = pd.DatetimeIndex(test['Date']).month
 print(test.head())
 
 #convert categorical to numerical 
-categorical_to_numerical(test, 'StateHoliday')
-categorical_to_numerical(test, 'SchoolHoliday')
+factor_to_integer(test, 'StateHoliday')
+factor_to_integer(test, 'SchoolHoliday')
 
 print(test.dtypes)
 
@@ -221,10 +221,10 @@ store.loc[store['Promo2'] != 0, 'Promo2SinceYear'] = store['Promo2SinceYear'].ma
 
 #convert categorical to numerical 
 print(store.dtypes)
-categorical_to_numerical(store, 'StoreType')
-categorical_to_numerical(store, 'Assortment')
+factor_to_integer(store, 'StoreType')
+factor_to_integer(store, 'Assortment')
 store['PromoInterval'].unique()
-categorical_to_numerical(store, 'PromoInterval', start_value=0)
+factor_to_integer(store, 'PromoInterval', start_value=0)
 
 print(store.dtypes)
 print(store.head())
