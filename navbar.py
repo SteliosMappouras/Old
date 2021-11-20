@@ -14,15 +14,9 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression
 
 #Preprocessing related libraries
-from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
-from scipy.stats import boxcox
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import cross_val_score
-
 
 
 def categorical_to_numerical(df, colname, start_value=0):
