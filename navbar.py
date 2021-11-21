@@ -60,22 +60,21 @@ store = pd.read_csv("store.csv", sep=",", dtype={'StoreType': str,'Assortment': 
 
 
 
-st.session_state.workflow = st.sidebar.selectbox('Select a Data Science Life Cycle', ['Business problem', 'Data acquisition', 'Data preparation', 'Exploratory Data analysis', 'Data modeling', 'Visualization & Communication', 'Deployment & Maintenance'] )
+st.session_state.workflow = st.sidebar.selectbox('Select a step from Data Science Life Cycle', ['Business problem', 'Data acquisition', 'Data preparation, Exploratory Data analysis, Data modeling','Visualization & Communication'] )
 
 
 
 
 if st.session_state.workflow == 'Business problem':
        
-        st.session_state.data_type=st.title('''**Πρόβλεψη μελλοντικών πωλήσεων**''')
+        st.session_state.data_type=st.title('''**Prediction of future sales**''')
         st.session_state.data_type=st.header('**Step 1 - Business Problem**') 
-        st.session_state.data_type=st.subheader('Πρόβλημα') 
-        st.session_state.data_type=st.caption("""Χρησιμοποιώντας τα διαθέσιμα δεδομένα 
-        (ιστορικά δεδομένα πωλήσεων) να ακολουθηθούν τα αναγκαία βήματα και 
-        αναπτυχθεί ένα μοντέλο όπου θα μπορεί να προβλέψει τις πωλήσεις που 
-        μπορούν να γίνουν μελλοντικά (στο σχετικό test dataset).""")
+        st.session_state.data_type=st.subheader('Problem') 
+        st.session_state.data_type=st.caption("""Using the available data (historical sales data) follow 
+the necessary steps and develop a model 
+where it can predict the sales that can be made in the future.""")
 
-        st.session_state.data_type=st.subheader('Δεδομένα') 
+        st.session_state.data_type=st.subheader('Data') 
         st.session_state.data_type=st.caption("""Ηistorical data including Sales, Historical data excluding Sales and Supplemental information about the stores """)
            
 
@@ -102,7 +101,12 @@ if st.session_state.workflow == 'Data acquisition':
 
 
 
-if st.session_state.workflow == 'Data preparation':
+if st.session_state.workflow == 'Data preparation, Exploratory Data analysis, Data modeling':
+        helper = st.expander('Sections')  
+        helper.write("🔸 Step 3 of Data Science Life Cycle - Data preparation")
+        helper.write("🔸 Step 4 of Data Science Life Cycle - Exploratory Data analysis")
+        helper.write("🔸 Step 5 of Data Science Life Cycle - Data modeling")
+
         st.session_state.data_type=st.title('**Step 3 - Data preparation**')
         st.session_state.data_type=st.text("")
         st.session_state.data_type=st.text("")
@@ -389,7 +393,8 @@ Step 3 - Fix coorelated values""", language="markdown")
         store.loc[store['Promo2'] != 0, 'Promo2SinceYear'] = store['Promo2SinceYear'].max() - store.loc[store['Promo2'] != 0, 'Promo2SinceYear']
 
         st.write(store.describe())
-
+        st.session_state.data_type=st.text("")
+        
         st.code("""Step 4 - We want to convert the remaining categorical data into numerical
 We use our function categorical_to_numerical for StoreType, assortment and 
 Promo Interval.
@@ -437,68 +442,133 @@ Step 7 - Fix them with sklean imputer""", language="markdown")
 
 
         st.success('All datasets are clean now, so we can start merging them to fit them to our models.')
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
 
 
         
-        st.write("To merge store and train, first we want to check if the \"Store\" column is the same in both datasets:")
-        Stores_in_Store = pd.Series(store_new['Store'])
-        Stores_in_Train = pd.Series(train['Store'])
-        st.write(sum(Stores_in_Train.isin(Stores_in_Store) == False))
+        st.code("""To merge store and train, first we want to check if the \"Store\" 
+column is the same in both datasets.
+Step 1 - Check the column.""", language="markdown")
+        
+        
+        col1, col3 = st.columns([3,1])
 
-        st.write("They are the same, now merge them")
+        with col1:
+                code = '''sum(Stores_in_Train.isin(Stores_in_Store) == False)'''
+                st.code(code, language='python')
+        
+
+        with col3:
+                st.session_state.data_type=st.text("")
+                Stores_in_Store = pd.Series(store_new['Store'])
+                Stores_in_Train = pd.Series(train['Store'])
+                st.write(sum(Stores_in_Train.isin(Stores_in_Store) == False))
+        
+        
+       
+        st.session_state.data_type=st.text("")
+
+        st.code("""We can see that they are the same.
+Step 2 - Merge them.""", language="markdown")
         train_store = pd.merge(train, store_new, how = 'left', on='Store')
-        st.write("Train_Store dataset:")
-        st.write(train_store.shape)
+        
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+                st.write("Train_Store dataset:")
+
+        with col2:
+                 st.write(train_store.shape)
+
+
+        st.session_state.data_type=st.text("")
+      
         st.write(train_store.head())
         st.write(train_store.tail())
-        st.write("Check for nulls:")
-        st.write(train_store.isnull().sum())
+        
 
-        st.write("Merge Test and Store datasets")
+        col1, col3 = st.columns([3,1])
+
+        with col1:
+                code = '''train_store.isnull().sum()'''
+                st.code(code, language='python')
+        
+
+        with col3:
+                st.code("""Step 3 - Check for nulls""", language="markdown")
+
+        st.write(train_store.isnull().sum())
+        st.session_state.data_type=st.text("")
+
+
+        st.code("""Step 4 - Merge Test and Store datasets""", language="markdown")
+       
         test_store = test.reset_index().merge(store_new, how = 'left', on='Store')
-        st.write("Test Store dataset:")
-        st.write(test_store.shape)
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+                 st.write("Test Store dataset:")
+
+        with col2:
+                 st.write(test_store.shape)
+
         st.write(test_store.head())
         st.write(test_store.tail())
-        st.write("Check for nulls:")
+
+        st.code("""Step 5 - Check for nulls""", language="markdown")
+
         st.write(test_store.isnull().sum())
 
-        st.write("Train Store dataset will be used for training of the model, and test_store for testing.")
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        st.info('Train and Store datasets will be used for training of the model, and test_store for testing.')
 
-
-
-        st.session_state.data_type=st.subheader('Visual Exploration:')
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.title('**Step 4 - Exploratory data analysis**')
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        
 
         
-        st.write("coorelation between columns in train_store")
+        st.subheader("Coorelation between columns in train_store")
 
         fig, ax = plt.subplots()
         sns.heatmap(train_store.corr(), ax=ax)
         st.write(fig)
 
-        st.write("coorelation between columns in test_store")
+        st.session_state.data_type=st.text("")
+        st.subheader("Coorelation between columns in test_store")
 
         fig, ax = plt.subplots()
         sns.heatmap(test_store.corr(), ax=ax)
         st.write(fig)
+        st.session_state.data_type=st.text("")
 
-        st.write("Sales per customer")
+        st.subheader("Sales per customer")
 
         fig, ax = plt.subplots()
         sns.histplot(x="Customers", y="Sales",data=train_store, ax=ax)
         st.write(fig)
+        st.session_state.data_type=st.text("")
 
-        st.write("Sales by year")
+        st.subheader("Sales by year")
         fig, ax = plt.subplots()
         sns.histplot(x="Year", y="Sales",data=train_store, ax=ax)
         st.write(fig)
+        st.session_state.data_type=st.text("")
 
         fig, ax = plt.subplots()
         sns.boxplot(x="Year", y="Sales",data=train_store, ax=ax)
         st.write(fig)
+        st.session_state.data_type=st.text("")
 
-
-        st.write("Sales by Month")
+        st.subheader("Sales by Month")
         fig, ax = plt.subplots()
         sns.histplot(x="Month", y="Sales",data=train_store, ax=ax)
         st.write(fig)
@@ -507,8 +577,8 @@ Step 7 - Fix them with sklean imputer""", language="markdown")
         sns.boxplot(x="Month", y="Sales",data=train_store, ax=ax)
         st.write(fig)
 
-        
-        st.write("Sales on Holidays")
+        st.session_state.data_type=st.text("")
+        st.subheader("Sales on Holidays")
         fig, ax = plt.subplots()
         sns.histplot(x="SchoolHoliday", y="Sales",data=train_store, ax=ax)
         st.write(fig)
@@ -518,7 +588,22 @@ Step 7 - Fix them with sklean imputer""", language="markdown")
         st.write(fig)
         
 
-        st.write("Now, its time to start modeling. First of all, we will drop columns that are useless for the forecasting, like Customers, Data from train_store, and Date and Id from test_store")
+
+
+
+
+
+
+
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.title('**Step 5 - Data modeling**')
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+
+        st.code("""Now, its time to start modeling. First of all, we will drop columns that are useless for the forecasting, like Customers, Data from train_store, and Date and Id from test_store""", language="markdown")
+        
         train_model = train_store.drop(['Customers', 'Date'], axis=1)
 
         st.write(train_model.head())
@@ -557,42 +642,12 @@ Step 7 - Fix them with sklean imputer""", language="markdown")
 
 
                 
-        st.learn("simperasmata:................")                
+        st.write("simperasmata:................")                
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if st.session_state.workflow == 'Exploratory Data analysis':
-        st.session_state.data_type=st.header('**Step 4 - Exploratory Data analysis**')
-
-if st.session_state.workflow == 'Data modeling':
-        st.session_state.data_type=st.header('**Step 5 - Data modeling**')
 
 if st.session_state.workflow == 'Visualization & Communication':
         st.session_state.data_type=st.header('**Step 6 - Visualization & Communication**')
-
-if st.session_state.workflow == 'Deployment & Maintenance':
-        st.session_state.data_type=st.header('**Step 7 - Deployment & Maintenance**')
-
 
 
 
