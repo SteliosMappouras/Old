@@ -61,7 +61,7 @@ store = pd.read_csv("store.csv", sep=",", dtype={'StoreType': str,'Assortment': 
 
 
 
-st.session_state.workflow = st.sidebar.selectbox('Select a step from Data Science Life Cycle', ['Business problem', 'Data acquisition', 'Data preparation, Exploratory Data analysis, Data modeling','Visualization & Communication'] )
+st.session_state.workflow = st.sidebar.selectbox('Select a step from Data Science Life Cycle', ['Business problem', 'Data acquisition', 'Data preparation, Exploratory Data analysis, Data modeling'] )
 
 
 
@@ -602,7 +602,9 @@ Step 2 - Merge them.""", language="markdown")
         st.session_state.data_type=st.text("")
         st.session_state.data_type=st.text("")
 
-        st.code("""Now, its time to start modeling. First of all, we will drop columns that are useless for the forecasting, like Customers, Data from train_store, and Date and Id from test_store""", language="markdown")
+        st.code("""Now, its time to start modeling. First of all, we will drop columns that are useless 
+for the forecasting, like Customers, Data from train_store, and Date and ID 
+from test_store""", language="markdown")
         
         train_model = train_store.drop(['Customers', 'Date'], axis=1)
 
@@ -611,44 +613,84 @@ Step 2 - Merge them.""", language="markdown")
         test_model = test_store.drop(['Date','Id'], axis=1)
         st.write(test_model.head())
 
+        st.code("""Also, for the train we will drop Sales column, 
+because we want to fit our models without the Sales so we can make the forecast
+Then, break train test split using \"train_test_split function\"""", language="markdown")
 
-        st.write("Also, for the train we will drop Sales column, because we want to fit our models without it to make forecast")
         X = train_model.drop('Sales', axis=1)
         y = train_model['Sales']
 
-        st.write("Then, break train test split using \"train_test_split function\"")
         X = train_model.drop('Sales', axis=1)
         y = train_model['Sales']
         X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 
+        st.code("""The models that we are going to use are: Sklearn's: 
+Decision Tree Regressor, Gradient Boosting Regressor, Linear Regression""", language="markdown")
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        col1, col2, col3 = st.columns(3)
 
-        st.write("The models that we are going to use are: Sklearn's: Decision Tree Regressor, Gradient Boosting Regressor, Linear Regression")
+        with col1:
+                 st.write("**Decision Tree Regressor**")
+                 st.caption("""Decision tree regression observes features of an object 
+                 and trains a model in the structure of a tree to predict data in the future to 
+                 produce meaningful continuous output. Continuous output means that the output/result is not discrete, i.e., 
+                 it is not represented just by a discrete, known set of numbers or values.""")
+
+        with col2:
+                 st.write("**Gradient Boosting Regressor**")
+                 st.caption("""GB builds an additive model in a forward stage-wise fashion; 
+                 Models are fit using any arbitrary differentiable loss function and gradient descent 
+                 optimization algorithm. This gives the technique its name, “gradient boosting,” 
+                 as the loss gradient is minimized as the model is fit, much like a neural network.""")
+
+        with col3:
+                 st.write("**Linear Regression**")
+                 st.caption("""Linear Regression is a machine learning algorithm based on supervised learning. 
+                 It performs a regression task. Regression models a target prediction value based 
+                 on independent variables. It is mostly used for finding out the relationship between 
+                 variables and forecasting. Different regression models differ based on – the kind of 
+                 relationship between dependent and independent variables,
+                 they are considering and the number of independent variables being used.""")
+
+        
+        
+        
+        
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        
+        
         model_list = {
                 'DecisionTreeRegressor':DecisionTreeRegressor(),
                 'GradientBoostingRegressor':GradientBoostingRegressor(),
                 'LinearRegression':LinearRegression(),
                 }
+        
+         
+        for  model_name,model in model_list.items(): 
+                                st.write("**",model_name,"**")
+                                model.fit(X_train, y_train)
+                                st.write("**Accuracy: **",model.score(X_test, y_test))
+                                test_model = pd.DataFrame(test_model)
+                                submission = {}
+                                submission = pd.DataFrame()
+                                submission["Predicted Sales"] = model.predict(test_model)
+                                submission = submission.reset_index()
+                                st.write(submission)
+
+
                 
-
-        for  model_name,model in model_list.items():
-                st.write(model_name,":")
-                model.fit(X_train, y_train)
-                st.write("Accuracy:",model.score(X_test, y_test))
-                test_model = pd.DataFrame(test_model)
-                submission = {}
-                submission = pd.DataFrame()
-                submission["Predicted Sales"] = model.predict(test_model)
-                submission = submission.reset_index()
-                st.write(submission)
-
-
-                
-        st.write("simperasmata:................")                
+        st.header=("Selection")
+        st.subheader("""We used the score method that provides us a default evaluation 
+        criterion for the problem we are expected to solve.
+        Based on the above analysis, we'll choose the Decision Tree Regressor as our final model to predict the sales because it gives us 
+        more accuracy.""") 
+        st.balloons()                
 
 
 
-if st.session_state.workflow == 'Visualization & Communication':
-        st.session_state.data_type=st.header('**Step 6 - Visualization & Communication**')
+
 
 
 
@@ -661,8 +703,7 @@ about.write('👱‍♂️ Ιωάννη Βολονάκη')
 about.write('👨‍🦰 Μάριος Κυριακίδης')
 about.write('👩‍🦱 Σαββίνα Ρούσου')
 
-helper = st.sidebar.expander('How to use')  
-helper.write("This is a helper")            
+         
      
 
 
