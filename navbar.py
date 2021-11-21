@@ -57,12 +57,17 @@ test = pd.read_csv("test.csv", sep=",", index_col = 'Id', parse_dates=['Date'],
                             dtype={'StateHoliday': str, 'SchoolHoliday':str})
 store = pd.read_csv("store.csv", sep=",", dtype={'StoreType': str,'Assortment': str,'PromoInterval': str})
 
-st.title('''**Πρόβλεψη μελλοντικών πωλήσεων**''')
+
+
 
 st.session_state.workflow = st.sidebar.selectbox('Select a Data Science Life Cycle', ['Business problem', 'Data acquisition', 'Data preparation', 'Exploratory Data analysis', 'Data modeling', 'Visualization & Communication', 'Deployment & Maintenance'] )
 
+
+
+
 if st.session_state.workflow == 'Business problem':
-        '''
+       
+        st.session_state.data_type=st.title('''**Πρόβλεψη μελλοντικών πωλήσεων**''')
         st.session_state.data_type=st.header('**Step 1 - Business Problem**') 
         st.session_state.data_type=st.subheader('Πρόβλημα') 
         st.session_state.data_type=st.caption("""Χρησιμοποιώντας τα διαθέσιμα δεδομένα 
@@ -72,18 +77,7 @@ if st.session_state.workflow == 'Business problem':
 
         st.session_state.data_type=st.subheader('Δεδομένα') 
         st.session_state.data_type=st.caption("""Ηistorical data including Sales, Historical data excluding Sales and Supplemental information about the stores """)
-            '''
-
-
-
-
-
-
-
-
-
-
-
+           
 
 if st.session_state.workflow == 'Data acquisition':
         st.session_state.data_type=st.header('**Step 2 - Data acquisition**')
@@ -106,214 +100,346 @@ if st.session_state.workflow == 'Data acquisition':
         st.write(store)
 
 
+
+
 if st.session_state.workflow == 'Data preparation':
-        st.session_state.data_type=st.header('**Step 3 - Data preparation**')
-        st.session_state.data_type=st.subheader('Cleaning')
-        st.session_state.data_type=st.write('Inconsistent data types, misspelled attributes, missing values, duplicated values')
+        st.session_state.data_type=st.title('**Step 3 - Data preparation**')
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
 
-        st.session_state.data_type=st.subheader('Transformation')
-        st.session_state.data_type=st.write('Normalization, aggregation')
+        col1, col2, col3 = st.columns(3)
 
-        st.session_state.data_type=st.subheader('Reduction')
-        st.session_state.data_type=st.write('Reduction in size')
-
-
-        st.session_state.data_type=st.write('We already started fixing inconsistent data types while importing the datasets, we parsed the data dypes as string in order to be able to handle it easier later.')
-        st.session_state.data_type=st.write('As we saw from visualizing some rows of each dataset, we have some categorical data, which we can turn into numerical: The date can break into Year/Month, we already have day of week in the dataset. Also, for example assortment is alphabetical,\'a\' -> 0, \'b\' -> 1, etc.')
-        st.session_state.data_ypes=st.write('This function is created to turn categorical column into numerical:\n def categorical_to_numerical(df, colname, start_value=0):\
-                                 while df[colname].dtype == object:\
-        myval = start_value # factor starts at "start_value".\
-        for sval in df[colname].unique():\
-            df.loc[df[colname] == sval, colname] = myval\
-            myval += 1\
-        df[colname] = df[colname].astype(int, copy=False)')
+        with col1:
+                st.session_state.data_type=st.markdown("<h5 style='text-align: center;'>Cleaning</h5>", unsafe_allow_html=True) 
+                st.session_state.data_type=st.markdown("<h6 style='text-align: center; color:grey'>Inconsistent data types</h6>", unsafe_allow_html=True)
+                st.session_state.data_type=st.markdown("<h6 style='text-align: center; color:grey'>Misspelled attributes</h6>", unsafe_allow_html=True)
+                st.session_state.data_type=st.markdown("<h6 style='text-align: center; color:grey'>Missing values</h6>", unsafe_allow_html=True)
+                st.session_state.data_type=st.markdown("<h6 style='text-align: center; color:grey'>Duplicated values</h6>", unsafe_allow_html=True)   
 
 
-        st.session_state.data_type=st.subheader('Train Dataset:')
-        st.session_state.data_types=st.write('Check for duplicates and drop them')
-        st.session_state.data_types=st.write("Train shape before Dropping:",train.shape)
+        with col2:
+                st.session_state.data_type=st.markdown("<h5 style='text-align: center;'>Transformation</h5>", unsafe_allow_html=True) 
+                st.session_state.data_type=st.markdown("<h6 style='text-align: center; color:grey'>Normalization</h6>", unsafe_allow_html=True)
+                st.session_state.data_type=st.markdown("<h6 style='text-align: center; color:grey'>Aggregation</h6>", unsafe_allow_html=True)
+
+        with col3:
+                st.session_state.data_type=st.markdown("<h5 style='text-align: center;'>Reduction</h5>", unsafe_allow_html=True) 
+                st.session_state.data_type=st.markdown("<h6 style='text-align: center; color:grey'>Reduction in size</h6>", unsafe_allow_html=True)
+
+
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")       
+        st.code("""We already started fixing inconsistent data types while importing the datasets, 
+we parsed the data types as strings in order to be able to handle it easier later. \n \nAs we saw from visualizing some rows of each dataset, we have some categorical data, 
+which we can turn into numerical: \n 
+The date can break into Year/Month (we already have day of week in the dataset). \n
+Also, for example assortment is alphabetical, \n'a' -> 0, \n'b' -> 1, \netc.""", language="markdown")
+       
+
+        code = '''#This function is created to turn categorical column into numerical.
+def categorical_to_numerical(df, colname, start_value=0):
+        while df[colname].dtype == object:
+                myval = start_value # factor starts at "start_value".   
+                for sval in df[colname].unique():
+                        df.loc[df[colname] == sval, colname] = myval
+                        myval += 1
+                df[colname] = df[colname].astype(int, copy=False)'''
+        st.code(code, language='python')
+
+        st.session_state.data_type=st.text("")
+
+
+        
+        st.session_state.data_type=st.header('Cleaning Train Dataset')
+        
+        st.code("Step 1 - Check for duplicates and drop them", language="markdown")
+
+
+       
+        st.session_state.data_types=st.write("Shape of Train dataset **before** dropping:",train.shape)
         train = train.drop_duplicates()
-        st.session_state.data_types=st.write("After Dropping:",train.shape)
-        st.session_state.data_types=st.write("As we can see, no rows were dropped, we had no duplicates in train dataset.")
+        st.session_state.data_types=st.write("Shape of Train dataset **after** dropping:",train.shape)
+        st.session_state.data_types=st.write("✔ As we can see, no rows were dropped, we had no duplicates in train dataset.")
+        st.session_state.data_type=st.text("")
+       
+    
+        st.code("""Step 2 - Drop stores that are closed because they are useless for our forecast as 
+they have no sales""", language="markdown")
 
+        colο1, colο2, colο3 = st.columns(3)
 
-        st.session_state.data_types=st.write("Open Stores:",sum(train['Open'] == 1))
-        st.session_state.data_types=st.write("Closed Stores:",sum(train['Open'] == 0))
-        st.session_state.data_types=st.write("drop stores that are closed because they are useless for our forecast as they have no sales")
+        with colο1:
+                st.session_state.data_types=st.write("Before")
+
+        with colο2:
+                st.session_state.data_types=st.write("Open Stores:",sum(train['Open'] == 1))
+
+        with colο3:
+                st.session_state.data_types=st.write("Closed Stores:",sum(train['Open'] == 0))
+
         train = train[train.Open != 0]
-        st.session_state.data_types=st.write("Open Stores:",sum(train['Open'] == 1))
-        st.session_state.data_types=st.write("Closed Stores:",sum(train['Open'] == 0))
 
-        st.session_state.data_types=st.write("Next, we want to break the Date column into Year and Month, then drop date.")
+        colο1, colο2, colο3 = st.columns(3)
+
+        with colο1:
+                st.session_state.data_types=st.write("After")
+
+        with colο2:
+                st.session_state.data_types=st.write("Open Stores:",sum(train['Open'] == 1))
+
+        with colο3:
+                st.session_state.data_types=st.write("Closed Stores:",sum(train['Open'] == 0))
+
+        st.session_state.data_type=st.text("")
+
+        st.code("""Step 3 - We want to break the Date column into Year and Month, then drop date.""", language="markdown")
+
         train['Year'] = pd.DatetimeIndex(train['Date']).year
         train['Month'] = pd.DatetimeIndex(train['Date']).month
 
         sample = train.head(200)
         st.write(sample)
+        st.session_state.data_type=st.text("")
 
-        st.write('Now we want to convert remaining categorical data into numerical: ', train.dtypes.astype(str))
-        st.write('We use our function: categorical_to_numerical, for StateHoliday, SchoolHoliday')
-        categorical_to_numerical(train,'StateHoliday')
-        categorical_to_numerical(train,'SchoolHoliday')
-        st.write('Train Data Types After:', train.dtypes.astype(str))
+        st.code("""Step 4 - We want to convert the remaining categorical data into numerical.
+We use our function categorical_to_numerical that we mentioned above, for 
+StateHoliday and SchoolHoliday.
+""", language="markdown")
 
-        st.write('check for empty (NaN values) for each column')
+        
+        st.session_state.data_type=st.text("")
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+               st.write('', train.dtypes.astype(str))
+        with col2:
+                categorical_to_numerical(train,'StateHoliday')
+                categorical_to_numerical(train,'SchoolHoliday')
+                st.write('', train.dtypes.astype(str))
+                st.write('Train data types **after**')
+
+        st.session_state.data_type=st.text("")
+        st.code("""Step 5 - Check for empty (NaN values) for each column""", language="markdown")
         st.write(train.isnull().sum())
+        st.session_state.data_types=st.write("✔ All values are zero, we have no empty values.")
+        st.session_state.data_type=st.text("")
 
-        st.write('all values are zero, we have no empty values.')
 
-
-
-        st.write('specify the columns that are going to be used on the model.')
-
+        st.code("""Step 6 - Specify the columns that are going to be used on the model""", language="markdown")
 
         #we have no NANs in train dataset
         #select columns for the training data
         train = train[['Store', 'DayOfWeek', 'Date', 'Year', 'Month', 'Customers', 'Open','Promo', 'StateHoliday', 'SchoolHoliday', 'Sales']]
         st.write(list(train.columns.values))
-
-        st.write("Results of Train:","Stats:",train.describe(), "First Rows:",train.head(),"Last Rows:", train.tail())
-
-
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
 
 
+        st.write("**Results of Train:** \n"," \n **Stats:**",train.describe(), "**First Rows:**",train.head(),"**Last Rows:**", train.tail())
 
-
-
-
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
 
 
 
 
 
-        st.session_state.data_type=st.subheader('Test Dataset:')
+        st.session_state.data_type=st.header('Cleaning Test Dataset')
         st.session_state.data_types=st.write('Repeat the same preparation process')
 
-        st.session_state.data_types=st.write('Check for duplicates and drop them')
-        st.session_state.data_types=st.write("Test shape before Dropping:",test.shape)
+        st.code("Step 1 - Check for duplicates and drop them", language="markdown")
+        st.session_state.data_types=st.write("Shape of Test dataset **before** dropping:",test.shape)
         test = test.drop_duplicates()
-        st.session_state.data_types=st.write("After Dropping:",test.shape)
-        st.session_state.data_types=st.write("As we can see, no rows were dropped, we had no duplicates in test dataset.")
+        st.session_state.data_types=st.write("Shape of Test dataset **after** dropping:",test.shape)
+        st.session_state.data_types=st.write("✔ As we can see, no rows were dropped, we had no duplicates in train dataset.")
+        st.session_state.data_type=st.text("")
 
+        st.code("""Step 2 - Drop the stores that are closed because they are useless for our forecast as 
+they have no sales""", language="markdown")
+        
+        colο1, colο2, colο3 = st.columns(3)
 
-        st.session_state.data_types=st.write("Open Stores:",sum(test['Open'] == 1))
-        st.session_state.data_types=st.write("Closed Stores:",sum(test['Open'] == 0))
-        st.session_state.data_types=st.write("drop stores that are closed because they are useless for our forecast as they have no sales")
+        with colο1:
+                st.session_state.data_types=st.write("Before")
+
+        with colο2:
+                st.session_state.data_types=st.write("Open Stores:",sum(test['Open'] == 1))
+
+        with colο3:
+                st.session_state.data_types=st.write("Closed Stores:",sum(test['Open'] == 0))
+
         test = test[test.Open != 0]
-        st.session_state.data_types=st.write("Open Stores:",sum(test['Open'] == 1))
-        st.session_state.data_types=st.write("Closed Stores:",sum(test['Open'] == 0))
 
-        st.session_state.data_types=st.write("Next, we want to break the Date column into Year and Month, then drop date.")
+        colο1, colο2, colο3 = st.columns(3)
+
+        with colο1:
+                st.session_state.data_types=st.write("After")
+
+        with colο2:
+                st.session_state.data_types=st.write("Open Stores:",sum(test['Open'] == 1))
+
+        with colο3:
+                st.session_state.data_types=st.write("Closed Stores:",sum(test['Open'] == 0))
+
+        st.session_state.data_type=st.text("")
+
+        st.code("""Step 3 - We want to break the Date column into Year and Month, then drop date.""", language="markdown")
+
         test['Year'] = pd.DatetimeIndex(test['Date']).year
         test['Month'] = pd.DatetimeIndex(test['Date']).month
+
         test.drop(columns=['Date'])
         sample = test.head(200)
         st.write(sample)
+        st.session_state.data_type=st.text("")
 
-        st.write('Now we want to convert remaining categorical data into numerical: ', test.dtypes.astype(str))
-        st.write('We use our function: categorical_to_numerical, for StateHoliday, SchoolHoliday')
-        categorical_to_numerical(test,'StateHoliday')
-        categorical_to_numerical(test,'SchoolHoliday')
-        categorical_to_numerical(test,'Open')
+        st.code("""Step 4 - We want to convert the remaining categorical data into numerical""", language="markdown")
+        
+        st.session_state.data_type=st.text("")
 
-        st.write('Test Data Types After:', test.dtypes.astype(str))
+        col1, col2, col3 = st.columns(3)
 
-        st.write('check for empty (NaN values) for each column')
+        with col1:
+                st.write('', test.dtypes.astype(str))
+
+        with col2:
+                categorical_to_numerical(test,'StateHoliday')
+                categorical_to_numerical(test,'SchoolHoliday')
+                categorical_to_numerical(test,'Open')
+                st.write('', test.dtypes.astype(str))
+                st.write('Test data types **after**')
+        
+        
+        st.session_state.data_type=st.text("")
+        
+        st.code("""Step 6 - Check for empty (NaN values) for each column""", language="markdown")
         st.write(test.isnull().sum())
 
-     
-        st.write('There are 11 missing values in Open column, lets see from which store they come:')
+        st.code("""There are 11 missing values in Open column.
+Step 7 - Check from which store they come from""", language="markdown")
         st.write(test[np.isnan(test['Open'])])
-        st.write('It is from the store 622, lets search if there are is any info about this store in train dataset:')
+        st.session_state.data_type=st.text("")
+
+        st.code("""It is from the store 622.
+Step 8 - Search if there is any info about this store in train dataset""", language="markdown")
         st.write(train[train['Store'] == 622].head())
-        st.write('We found info, so we will assume that the store is open.')
+        st.write('We found some information, so we will assume that the store is open.')
         test[np.isnan(test['Open'])] = 1
 
-        st.write("Check if there are still missing values")
+        
+        st.code("""Step 9 - Check if there are still missing values""", language="markdown")
         st.write(test.isnull().sum())
 
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
 
-        st.write('Test Data Types:', test.dtypes.astype(str))
+        st.code("""Step 10 - Specify the columns that are going to be used on the model and change 
+the order to match train dataset.""", language="markdown")
 
+        col1, col2, col3 = st.columns(3)
 
-        st.write('specify the columns that are going to be used on the model and change the order to match train dataset.')
-        #select columns for the testing data
-        test = test[['Store', 'DayOfWeek', 'Date', 'Year', 'Month', 'Open','Promo', 'StateHoliday', 'SchoolHoliday']]
-        st.write(list(test.columns.values))
+        with col1:
+                st.write('Test Data Types:', test.dtypes.astype(str))
 
-        st.write("Results of Test:")
-        st.write("Stats:",test.describe(), "First Rows:",test.head(),"Last Rows:", test.tail())
+        with col2:
+                #select columns for the testing data
+                test = test[['Store', 'DayOfWeek', 'Date', 'Year', 'Month', 'Open','Promo', 'StateHoliday', 'SchoolHoliday']]
+                st.write(list(test.columns.values))
+        
+        
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        st.write("**Results of Test:**")
+        st.write("**Stats:**",test.describe(), "**First Rows:**",test.head(),"**Last Rows:**", test.tail())
 
-
-
-
-
-
-
-
-
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
 
 
 
         
-        st.session_state.data_type=st.subheader('Store Dataset:')
-        st.session_state.data_types=st.write('Repeat the same preparation process')
+        
+        st.session_state.data_type=st.header('Cleaning Store Dataset')
+        st.session_state.data_types=st.write('Repeat the same preparation process one last time')
+        st.session_state.data_type=st.text("")
 
-        st.session_state.data_types=st.write('Check for duplicates and drop them')
-        st.session_state.data_types=st.write("Store shape before Dropping:",store.shape)
+        st.code("Step 1 - Check for duplicates and drop them", language="markdown")
+        st.session_state.data_types=st.write("Shape of Store dataset **before** dropping:",store.shape)
         store = store.drop_duplicates()
-        st.session_state.data_types=st.write("After Dropping:",store.shape)
-        st.session_state.data_types=st.write("As we can see, no rows were dropped, we had no duplicates in store dataset.")
+        st.session_state.data_types=st.write("Shape of Store dataset **after** dropping:",store.shape)
+        st.session_state.data_types=st.write("✔ As we can see, no rows were dropped, we had no duplicates in train dataset.")
+        st.session_state.data_type=st.text("")
 
-        st.write('check for empty (NaN values) for each column')
+        st.code("""Step 2 - Check for empty (NaN values) for each column""", language="markdown")
         st.write(store.isnull().sum())
 
 
 
         st.write(store.describe())
-
-        st.write("Promo related values are coorelated. if there is no promo, coorelated values shoul be zeros.")
-        st.write("As we can see from the missing values, that is not correct in our dataset, we should fix it")
+        st.code("""Promo related values are coorelated. If there is no promo, coorelated values should 
+be zeros.
+As we can see from the missing values, we have this problem in our dataset. \n
+Step 3 - Fix coorelated values""", language="markdown")
+        
         store.loc[store['Promo2'] == 0, ['Promo2SinceWeek', 'Promo2SinceYear', 'PromoInterval']] = 0
         store.loc[store['Promo2'] != 0, 'Promo2SinceWeek'] = store['Promo2SinceWeek'].max() - store.loc[store['Promo2'] != 0, 'Promo2SinceWeek']
         store.loc[store['Promo2'] != 0, 'Promo2SinceYear'] = store['Promo2SinceYear'].max() - store.loc[store['Promo2'] != 0, 'Promo2SinceYear']
 
         st.write(store.describe())
 
-        st.write('Now we want to convert remaining categorical data into numerical: ', store.dtypes.astype(str))
-        st.write('We use our function: categorical_to_numerical, for StoreType, assortment, Promo Interval')
-        categorical_to_numerical(store, 'StoreType')
-        categorical_to_numerical(store, 'Assortment')
-        store['PromoInterval'].unique()
-        categorical_to_numerical(store, 'PromoInterval', start_value=0)
+        st.code("""Step 4 - We want to convert the remaining categorical data into numerical
+We use our function categorical_to_numerical for StoreType, assortment and 
+Promo Interval.
+""", language="markdown")
+        
+        
+        st.session_state.data_type=st.text("")
 
+        col1, col2, col3 = st.columns(3)
 
-        st.write('Stre Data Types:', store.dtypes.astype(str))
+        with col1:
+                st.write('', store.dtypes.astype(str))
 
-        st.write('check for empty (NaN values) for each column again:')
+        with col2:
+                categorical_to_numerical(store, 'StoreType')
+                categorical_to_numerical(store, 'Assortment')
+                store['PromoInterval'].unique()
+                categorical_to_numerical(store, 'PromoInterval', start_value=0)
+                st.write('', store.dtypes.astype(str))
+                st.write('Store data types **after**')
+        
+        st.session_state.data_type=st.text("")
+
+        st.code("""Step 6 - Check for empty (NaN values) for each column again""", language="markdown")
         st.write(store.isnull().sum())
 
 
-
-        st.write("We see that we still have NaN values, lets try fixing them with sklean imputer")
+        st.code("""We see that we still have NaN values.
+Step 7 - Fix them with sklean imputer""", language="markdown")
         imputer = SimpleImputer().fit(store)
         store_imputed = imputer.transform(store)
 
         store_new = pd.DataFrame(store_imputed, columns=store.columns.values)
         st.write(store_new.isnull().sum())
 
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
 
-        st.write("Results of Store:")
-        st.write("Stats:",store.describe(), "First Rows:",store.head(),"Last Rows:", store.tail())
+        st.write("**Results of Store:**")
+        st.write("**Stats:**",store.describe(), "**First Rows:**",store.head(),"**Last Rows:**", store.tail())
 
-
-
-
-
-        st.write("All datasets are clean now, so we can start merging them to fit them to our models:")
-
+        st.session_state.data_type=st.text("")
+        st.session_state.data_type=st.text("")
 
 
+
+        st.success('All datasets are clean now, so we can start merging them to fit them to our models.')
+
+
+        
         st.write("To merge store and train, first we want to check if the \"Store\" column is the same in both datasets:")
         Stores_in_Store = pd.Series(store_new['Store'])
         Stores_in_Train = pd.Series(train['Store'])
@@ -482,18 +608,6 @@ about.write('👩‍🦱 Σαββίνα Ρούσου')
 helper = st.sidebar.expander('How to use')  
 helper.write("This is a helper")            
      
-
-      
-
-
-
-            
-
-
-
-
-
-
 
 
 
