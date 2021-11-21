@@ -12,6 +12,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression
+from sklearn.neighbors import KNeighborsRegressor
 
 #Preprocessing related libraries
 from sklearn.model_selection import train_test_split
@@ -622,12 +623,13 @@ Step 2 - Merge them.""", language="markdown")
         X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 
 
-        st.write("The models that we are going to use are: Sklearn's: LinearRegression, Random Forest, GradientBoostingRegressor")
+        st.write("The models that we are going to use are: Sklearn's: Decision Tree Regressor, Gradient Boosting Regressor, Linear Regression")
         model_list = {
+                'DecisionTreeRegressor':DecisionTreeRegressor(),
+                'GradientBoostingRegressor':GradientBoostingRegressor(),
                 'LinearRegression':LinearRegression(),
-                'RandomForest':RandomForestRegressor(),
-                'GradientBoostingRegressor':GradientBoostingRegressor()
                 }
+                
 
         for  model_name,model in model_list.items():
                 st.write(model_name,":")
@@ -663,7 +665,6 @@ about.write('👩‍🦱 Σαββίνα Ρούσου')
 helper = st.sidebar.expander('How to use')  
 helper.write("This is a helper")            
      
-
 
 
 st.markdown("""
