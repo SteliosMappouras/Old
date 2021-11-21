@@ -595,7 +595,6 @@ Step 2 - Merge them.""", language="markdown")
 
 
 
-
         st.session_state.data_type=st.text("")
         st.session_state.data_type=st.text("")
         st.session_state.data_type=st.title('**Step 5 - Data modeling**')
