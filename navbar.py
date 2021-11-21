@@ -681,11 +681,9 @@ Decision Tree Regressor, Gradient Boosting Regressor, Linear Regression""", lang
 
 
                 
-        st.header=("Selection")
-        st.subheader("""We used the score method that provides us a default evaluation 
-        criterion for the problem we are expected to solve.
-        Based on the above analysis, we'll choose the Decision Tree Regressor as our final model to predict the sales because it gives us 
-        more accuracy.""") 
+        st.session_state.data_type=st.header("Selection")
+        st.session_state.data_type=st.write("""We used the scoring method that provides us with a default evaluation criterion for the problem we are expected to solve. 
+        Based on the above analysis, we'll choose the Decision Tree Regressor as our final model to predict the sales because it gives us more accuracy.""") 
         st.balloons()                
 
 
